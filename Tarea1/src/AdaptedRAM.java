@@ -72,8 +72,7 @@ public class AdaptedRAM {
         }
     }
 
-    public void computeBlockOfMatrix(int matrixSubBlock, int stringBlock, int row){
-        int nwVal, nVal, wVal;
+    public void actualizePreviousRow(int matrixSubBlock, int stringBlock, int row){
         if(row == 0){
             if(!(matrixSubBlock == 0 && stringBlock ==0)){
                 for(int i = 0; i < numberOfInts; i++){
@@ -83,6 +82,23 @@ public class AdaptedRAM {
         } else {
             readIntoPreviousRow(matrixSubBlock, stringBlock);
         }
+    }
+
+    public void actualizeNWValues(int matrixSubBlock, int stringBlock, int row){
+        if(matrixSubBlock == SIZE_OF_INT - 1 && stringBlock == N/B - 1){
+            this.westValue = row + 1;
+            this.northWestValue = row;
+        }
+        else {
+            this.westValue = actualRow[numberOfInts - 1];
+            this.northWestValue = row==0 ? numberOfInts * matrixSubBlock + B * stringBlock : previousRow[numberOfInts - 1];
+        }
+    }
+
+    public void computeBlockOfMatrix(int matrixSubBlock, int stringBlock, int row){
+        int nwVal, nVal, wVal;
+
+        actualizePreviousRow(matrixSubBlock, stringBlock, row);
 
         wVal = westValue + 1;
         nVal = previousRow[0] + 1;
@@ -98,14 +114,7 @@ public class AdaptedRAM {
             actualRow[i] = Math.min(nwVal, Math.min(nVal, wVal));
         }
 
-        this.northWestValue = row==0 ? numberOfInts * matrixSubBlock + B * stringBlock : previousRow[numberOfInts - 1];
-
-        if(matrixSubBlock == SIZE_OF_INT - 1 && stringBlock == N/B - 1){
-            this.westValue = row + 1;
-        }
-        else {
-            this.westValue = actualRow[numberOfInts - 1];
-        }
+        actualizeNWValues(matrixSubBlock, stringBlock, row);
     }
 
     public void writeActualRowToFile(int matrixSubBlock, int stringBlock){
