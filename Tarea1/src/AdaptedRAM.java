@@ -1,3 +1,5 @@
+import java.io.*;
+
 public class AdaptedRAM {
     private static int B = 1024;
     private static int SIZE_OF_INT = 4;
@@ -107,11 +109,27 @@ public class AdaptedRAM {
     }
 
     public void writeActualRowToFile(int matrixSubBlock, int stringBlock){
-        // TODO
+        String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
+        try {
+            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(dir_row +"/B_"+ index +".wtf"));
+            for(int i: actualRow){
+                dataOutputStream.writeInt(i);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void readIntoPreviousRow(int matrixSubBlock, int stringBlock){
-        // TODO
+        String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
+        try{
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"/B_"+ index +".wtf"));
+            for(int i = 0; i < numberOfInts; i++){
+                previousRow[i] = dataInputStream.readInt();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void readIntoX(int block){
