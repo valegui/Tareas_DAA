@@ -115,6 +115,7 @@ public class AdaptedRAM {
             for(int i: actualRow){
                 dataOutputStream.writeInt(i);
             }
+            dataOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,17 +128,47 @@ public class AdaptedRAM {
             for(int i = 0; i < numberOfInts; i++){
                 previousRow[i] = dataInputStream.readInt();
             }
+            dataInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void readIntoX(int block){
-        // TODO
+    		String index = Integer.toString(block);
+        try{
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"/X_"+ index +".wtf"));
+            int i = 0;
+            char[] temp = new char[B];
+            while( dataInputStream.available() > 0) {
+            		char b = (char) dataInputStream.readByte();
+            		temp[i] = b;
+            		i++;	
+            }
+            this.X = new String(temp);
+            
+            dataInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void readIntoY(int block){
-        // TODO
+    		String index = Integer.toString(block);
+        try{
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"/Y_"+ index +".wtf"));
+            int i = 0;
+            char[] temp = new char[B];
+            while( dataInputStream.available() > 0) {
+            		char b = (char) dataInputStream.readByte();
+            		temp[i] = b;
+            		i++;	
+            }
+            this.Y = new String(temp);
+            
+            dataInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 }
