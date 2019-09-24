@@ -10,7 +10,7 @@ public class Algoritmo1 {
     public Algoritmo1(String x, String y){
         int lx = x.length();
         int ly = y.length();
-        if( lx > ly){
+        if(lx > ly){
             this.x = x;
             this.y = y;
             this.largo_x = lx;
