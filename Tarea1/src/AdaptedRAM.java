@@ -12,6 +12,11 @@ public class AdaptedRAM {
     private int[] actualRow; // 1024
     private String X; // 1024
     private String Y; // 1024
+    
+    /* directorios*/
+    private String dir_x;
+    private String dir_y;
+    private String dir_row;
 
     public AdaptedRAM(int M, int N){
         this.M = M;
@@ -20,16 +25,27 @@ public class AdaptedRAM {
         this.westValue = 1;
         this.northWestValue = 0;
 
-        for(int i = 0; i < this.numberOfInts; i++){
+        for(int i = 0; i < numberOfInts; i++){
             this.previousRow[i] = i + 1;
         }
-
+    }
+    
+    public void setDirX(String d_x) {
+    		this.dir_x = d_x;
+    }
+    
+    public void setDirY(String d_y) {
+		this.dir_y = d_y;
+    }
+    
+    public void setDirRow(String d_r) {
+		this.dir_row = d_r;
     }
 
     // TODO pasarle el path a donde estan los files
     public int calculateDistance(){
         computeMatrix();
-        return actualRow[this.numberOfInts - 1];
+        return actualRow[numberOfInts - 1];
     }
 
     public void computeMatrix(){
@@ -48,7 +64,7 @@ public class AdaptedRAM {
 
     // computar el bloque del archivo
     public void computeBlockOfFile(int stringBlock, int row){
-        for(int i = 0; i < this.SIZE_OF_INT; i++){
+        for(int i = 0; i < SIZE_OF_INT; i++){
             computeBlockOfMatrix(i, stringBlock, row);
             if(stringBlock != N/B - 1 && row!= N - 1) writeActualRowToFile(i, stringBlock);
         }
@@ -58,8 +74,8 @@ public class AdaptedRAM {
         int nwVal, nVal, wVal;
         if(row == 0){
             if(!(matrixSubBlock == 0 && stringBlock ==0)){
-                for(int i = 0; i < this.numberOfInts; i++){
-                    previousRow[i] = previousRow[i] + this.numberOfInts;
+                for(int i = 0; i < numberOfInts; i++){
+                    previousRow[i] = previousRow[i] + numberOfInts;
                 }
             }
         } else {
@@ -68,25 +84,25 @@ public class AdaptedRAM {
 
         wVal = westValue + 1;
         nVal = previousRow[0] + 1;
-        nwVal = (Y.charAt(this.numberOfInts * matrixSubBlock) == X.charAt(row % B)) ?
+        nwVal = (Y.charAt(numberOfInts * matrixSubBlock) == X.charAt(row % B)) ?
                 northWestValue : northWestValue + 1;
         actualRow[0] = Math.min(nwVal, Math.min(nVal, wVal));
 
-        for(int i = 1; i < this.numberOfInts; i++){
+        for(int i = 1; i < numberOfInts; i++){
             wVal = actualRow[i-1] + 1;
             nVal = previousRow[i] + 1;
-            nwVal = (Y.charAt(this.numberOfInts * matrixSubBlock + i) == X.charAt(row % B)) ?
+            nwVal = (Y.charAt(numberOfInts * matrixSubBlock + i) == X.charAt(row % B)) ?
                     previousRow[i - 1] : previousRow[i - 1] + 1;
             actualRow[i] = Math.min(nwVal, Math.min(nVal, wVal));
         }
 
-        this.northWestValue = row==0 ? numberOfInts * matrixSubBlock + B * stringBlock : previousRow[this.numberOfInts - 1];
+        this.northWestValue = row==0 ? numberOfInts * matrixSubBlock + B * stringBlock : previousRow[numberOfInts - 1];
 
-        if(matrixSubBlock == this.SIZE_OF_INT - 1 && stringBlock == N/B - 1){
+        if(matrixSubBlock == SIZE_OF_INT - 1 && stringBlock == N/B - 1){
             this.westValue = row + 1;
         }
         else {
-            this.westValue = actualRow[this.numberOfInts - 1];
+            this.westValue = actualRow[numberOfInts - 1];
         }
     }
 
