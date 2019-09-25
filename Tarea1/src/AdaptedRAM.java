@@ -27,6 +27,8 @@ public class AdaptedRAM {
         this.westValue = 1;
         this.northWestValue = 0;
 
+        this.previousRow = new int[numberOfInts];
+        this.actualRow = new int[numberOfInts];
         for(int i = 0; i < numberOfInts; i++){
             this.previousRow[i] = i + 1;
         }
@@ -44,7 +46,6 @@ public class AdaptedRAM {
 		this.dir_row = d_r;
     }
 
-    // TODO pasarle el path a donde estan los files
     public int calculateDistance(){
         computeMatrix();
         return actualRow[numberOfInts - 1];
@@ -68,7 +69,7 @@ public class AdaptedRAM {
     public void computeBlockOfFile(int stringBlock, int row){
         for(int i = 0; i < SIZE_OF_INT; i++){
             computeBlockOfMatrix(i, stringBlock, row);
-            if(stringBlock != N/B - 1 && row!= N - 1) writeActualRowToFile(i, stringBlock);
+            if(!(stringBlock == N/B - 1 && row== N - 1)) writeActualRowToFile(i, stringBlock);
         }
     }
 
@@ -91,7 +92,7 @@ public class AdaptedRAM {
         }
         else {
             this.westValue = actualRow[numberOfInts - 1];
-            this.northWestValue = row==0 ? numberOfInts * matrixSubBlock + B * stringBlock : previousRow[numberOfInts - 1];
+            this.northWestValue = row==0 ? numberOfInts * (matrixSubBlock + 1) + B * stringBlock : previousRow[numberOfInts - 1];
         }
     }
 
