@@ -1,42 +1,38 @@
-import java.io.*;
+import java.io.File;
 
 public class Main {
-    public static void main(String[] arguments) {
-        int hola = 29292;
-        int length = (int) (Math.log10(hola) + 1);
-        //System.out.println(length + 1);
-
-        DataOutputStream dataOutputStream = null;
-        ByteArrayOutputStream baos = null;
-
-        try{
-            baos = new ByteArrayOutputStream();
-            dataOutputStream = new DataOutputStream(new FileOutputStream("adios.txt"));
-            dataOutputStream.writeInt(1000000);
-            dataOutputStream.writeInt(2000000);
-            dataOutputStream.writeInt(30);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        DataInputStream dataIn = null;
-        try {
-            dataIn = new DataInputStream(new FileInputStream("adios.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-            try {
-                while(dataIn.available()>0){
-                    int k = dataIn.readInt();
-                    System.out.print(k+" ");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void listFilesForFolder(final File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                System.out.println(fileEntry.getName());
             }
+        }
+    }
 
-        // https://www.tutorialspoint.com/java/java_dataoutputstream.htm
+    public static int experimentAdaptedRAM(int N, int M, String directory){
+        FileGen fileGen = new FileGen();
+        try {
+            fileGen.genBlocks((int) (N/1024),"X_", directory);
+            fileGen.genBlocks((int) (N/1024),"Y_", directory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AdaptedRAM experiment = new AdaptedRAM(M, N);
+        experiment.setDirRow(directory);
+        experiment.setDirX(directory);
+        experiment.setDirY(directory);
+        return experiment.calculateDistance();
+    }
+
+    public static void main(String[] args){
+        String dir = System.getProperty("user.dir") + "/out/files/";
+        // int[] N = {1024, 2048, 4096, 8192};
+        // int[] M = {10, 20};
+        int N = 1024;
+        int M = 10;
+        int k = experimentAdaptedRAM(N, M, dir);
+        System.out.println(k);
     }
 }

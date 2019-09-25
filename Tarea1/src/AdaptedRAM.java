@@ -121,7 +121,7 @@ public class AdaptedRAM {
     public void writeActualRowToFile(int matrixSubBlock, int stringBlock){
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try {
-            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(dir_row +"/B_"+ index +".wtf"));
+            DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(dir_row +"B_"+ index +".wtf"));
             for(int i: actualRow){
                 dataOutputStream.writeInt(i);
             }
@@ -134,7 +134,7 @@ public class AdaptedRAM {
     public void readIntoPreviousRow(int matrixSubBlock, int stringBlock){
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try{
-            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"/B_"+ index +".wtf"));
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"B_"+ index +".wtf"));
             for(int i = 0; i < numberOfInts; i++){
                 previousRow[i] = dataInputStream.readInt();
             }
@@ -147,7 +147,7 @@ public class AdaptedRAM {
     public void readIntoX(int block){
     		String index = Integer.toString(block);
         try{
-            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"/X_"+ index +".wtf"));
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"X_"+ index +".wtf"));
             int i = 0;
             char[] temp = new char[B];
             while( dataInputStream.available() > 0) {
@@ -166,7 +166,7 @@ public class AdaptedRAM {
     public void readIntoY(int block){
     		String index = Integer.toString(block);
         try{
-            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"/Y_"+ index +".wtf"));
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_y +"Y_"+ index +".wtf"));
             int i = 0;
             char[] temp = new char[B];
             while( dataInputStream.available() > 0) {
