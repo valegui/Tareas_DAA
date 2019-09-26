@@ -87,8 +87,8 @@ public class AdaptedRAM {
 
     public void actualizeNWValues(int matrixSubBlock, int stringBlock, int row){
         if(matrixSubBlock == SIZE_OF_INT - 1 && stringBlock == N/B - 1){
-            this.westValue = row + 1;
-            this.northWestValue = row;
+            this.westValue = row + 2;
+            this.northWestValue = row + 1;
         }
         else {
             this.westValue = actualRow[numberOfInts - 1];
