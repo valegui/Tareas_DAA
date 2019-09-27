@@ -7,6 +7,7 @@ public class AdaptedRAM {
 
     private int M;
     private int N;
+    private int IO; //Cantidad de lecturas y escrituras
     /*cosas en RAM */
     private int westValue; // 4
     private int northWestValue; // 4
@@ -14,6 +15,7 @@ public class AdaptedRAM {
     private int[] actualRow; // 1024
     private String X; // 1024
     private String Y; // 1024
+    
     
     /* directorios*/
     private String dir_x;
@@ -23,6 +25,7 @@ public class AdaptedRAM {
     public AdaptedRAM(int M, int N){
         this.M = M;
         this.N = N;
+        this.IO = 0;
 
         this.westValue = 1;
         this.northWestValue = 0;
@@ -119,6 +122,7 @@ public class AdaptedRAM {
     }
 
     public void writeActualRowToFile(int matrixSubBlock, int stringBlock){
+    		this.IO++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(dir_row +"B_"+ index +".wtf"));
@@ -132,6 +136,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoPreviousRow(int matrixSubBlock, int stringBlock){
+    		this.IO++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"B_"+ index +".wtf"));
@@ -145,6 +150,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoX(int block){
+    		this.IO++;
     		String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"X_"+ index +".wtf"));
@@ -164,6 +170,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoY(int block){
+    		this.IO++;
     		String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_y +"Y_"+ index +".wtf"));
