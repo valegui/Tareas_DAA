@@ -207,9 +207,9 @@ public class RAMConFronteras {
 
     public void writeFrontierRowToFile(int subMatrixID){
         // subMatrixID va de 0 a 15 en el peor caso
-        // m=20; f = 1; subMatrixID = {0, 1, 2, 3}
-        // m=40; f = 2; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7}
-        // m=80; f = 4; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
+        // m=20; f = 1; i = {0, 1, 2, 3}
+        // m=40; f = 2; i = {0, 1, 2, 3, 4, 5, 6, 7}
+        // m=80; f = 4; i = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 
         String index = Integer.toString(subMatrixID);
         for(int i = 0; i < SIZE_OF_INT * f ; i++){
@@ -266,6 +266,46 @@ public class RAMConFronteras {
             } catch (IOException e){
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void readIntoX(int subMatrixID){
+        String index;
+        this.X = "";
+        try{
+            for(int i = 0; i < f; i++){
+                index = Integer.toString(subMatrixID * f + i);
+                DataInputStream dataInputStream = new DataInputStream(
+                        new FileInputStream(dir_x + "X_" + index + ".wtf")
+                );
+                while( dataInputStream.available() > 0) {
+                    this.X += (char) dataInputStream.readByte();
+                }
+                I++;
+                dataInputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readIntoY(int subMatrixID){
+        String index;
+        this.Y = "";
+        try{
+            for(int i = 0; i < f; i++){
+                index = Integer.toString(subMatrixID * f + i);
+                DataInputStream dataInputStream = new DataInputStream(
+                        new FileInputStream(dir_y + "Y_" + index + ".wtf")
+                );
+                while( dataInputStream.available() > 0) {
+                    this.Y += (char) dataInputStream.readByte();
+                }
+                I++;
+                dataInputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
