@@ -1,9 +1,7 @@
 import java.util.Arrays;
 
 public class RAMConFronteras {
-    private static int I;
-    private static int O;
-
+    
     public static class AsbtractBlock{
         int posX;
         int posY;
@@ -35,54 +33,50 @@ public class RAMConFronteras {
     }
 
     public static int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
-        I = 0;
-        O = 0;
-        int total_X = subStr_X.length;
-        int total_Y = subStr_Y.length;
-        int cantidadCaracteres_X = 0;
-        int cantidadCaracteres_Y = 0;
+        int total_X = subStr_X.length;int total_Y = subStr_Y.length; // Cantidad de archivos
+        AsbtractBlock[] bloquesEnArchivos = new AsbtractBlock[total_Y]; // Todos los bloques necesarios;
+        int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
+        String str_X, str_Y; // Substrings actuales
+        int[] izq, sup; // Fronteras actuales
 
-        AsbtractBlock[] blocks_anterior = new AsbtractBlock[total_X]; // Todos los bloques necesarios;
-
-        // Primera iteración
-        String str_X = subStr_X[0];
-        String str_Y = subStr_Y[0];
-
-        cantidadCaracteres_X += str_X.length();
-        cantidadCaracteres_Y += str_Y.length();
-
-        // Frontera izquierda
-        int[] fronteraLateral = generarFrontera(cantidadCaracteres_X, 1);
-        int[] fronteraSuperior = generarFrontera(cantidadCaracteres_Y + 1, 0);
-        
-        blocks_anterior[0] = new AsbtractBlock(0, 0, str_X, str_Y, fronteraLateral, fronteraSuperior);
         // Itero sobre filas de X
-        for(int a = 1; a < total_X; a++){
+        for(int a = 0; a < total_X; a++){
+            // TODO: Auí leer archivo a-ésimo de X
             str_X = subStr_X[a]; // Saco String de A
-            
-            // Hago iteración especial de primera columna
-            int[] izq = generarFrontera(str_X.length(), cantidadCaracteres_X + 1);
             cantidadCaracteres_X += str_X.length();
 
-            int[] sup = blocks_anterior[0].fronterasCalculadas[0];
-
-            blocks_anterior[0] = new AsbtractBlock(1, 0, str_X, str_Y, izq, sup); // Guardo en posición que no voy a usar mas
-
-
-            // Itero sobre el resto de las columnas
-            for(int j = 1; j < total_Y; j++){
+            // Itero sobre columnas de Y
+            for(int j = 0; j < total_Y; j++){
+                // TODO: Aquí leer archivo j-ésimo de Y
                 str_Y = subStr_Y[j]; // Saco nuevo substring
+                cantidadCaracteres_Y += str_Y.length();
 
-                // TODO: iteracion general
+                // Primera columna es especial para X: generar frontera lateral de X
+                if( j == 0){
+                    izq = generarFrontera(str_X.length(), cantidadCaracteres_X + 1);
+
+                }else{ // Sino, leer frontera lateral
+                    izq = bloquesEnArchivos[j-1].fronterasCalculadas[0];
+                    // TODO: Aquí leer frontera lateral de archivo
+                }
+
+                // En primera fila se generan fronteras superiores
+                if( a == 0){
+                    sup = generarFrontera(str_Y.length() + 1, cantidadCaracteres_Y); // Empieza desde el largo anterior
+
+                }else{ // Sino leer frontera superior
+                    sup = bloquesEnArchivos[j-1].fronterasCalculadas[1];
+                    // TODO: Aquí leer la frontera superior de archivo
+                }
+
+                // En este punto ya tengo ambas fronteras y strings definidas, calculo nuevas fronteras y sobreescribo
+                bloquesEnArchivos[j] = new AsbtractBlock(a, j, str_X, str_Y, izq, sup); // Guardo en posición que no voy a usar mas
+                // TODO: Aquí guardar ambas fronteras en el archivo j-ésimo
             }
         }
-        
-        
-        // Resto de iteración
-        
-
-
-
+        // Aquí ya basta retornar el último valor de la última fila del último archivo, que es la frontera superior del archivo j-esimo
+        return bloquesEnArchivos[total_Y - 1].fronterasCalculadas[0][bloquesEnArchivos[total_Y - 1].fronterasCalculadas[0].length - 1];
+        // TODO: Aqui leer las fronteras del último archivo y extraer último valor
     }
 
 
