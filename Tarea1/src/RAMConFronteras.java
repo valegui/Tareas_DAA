@@ -45,29 +45,31 @@ public class RAMConFronteras {
         for(int a = 0; a < total_X; a++){
             // TODO: Auí leer archivo a-ésimo de X
             str_X = subStr_X[a]; // Saco String de A
-            cantidadCaracteres_X += str_X.length();
+
 
             // Itero sobre columnas de Y
             for(int j = 0; j < total_Y; j++){
                 // TODO: Aquí leer archivo j-ésimo de Y
                 str_Y = subStr_Y[j]; // Saco nuevo substring
-                cantidadCaracteres_Y += str_Y.length();
+
 
                 // Primera columna es especial para X: generar frontera lateral de X
                 if( j == 0){
                     izq = generarFrontera(str_X.length(), cantidadCaracteres_X + 1);
+                    cantidadCaracteres_X += str_X.length();
 
                 }else{ // Sino, leer frontera lateral
-                    izq = frontiersInFiles[j-1][0];
+                    izq = frontiersInFiles[j-1][1];
                     // TODO: Aquí leer frontera lateral de archivo
                 }
 
                 // En primera fila se generan fronteras superiores
                 if( a == 0){
                     sup = generarFrontera(str_Y.length() + 1, cantidadCaracteres_Y); // Empieza desde el largo anterior
+                    cantidadCaracteres_Y += str_Y.length();
 
                 }else{ // Sino leer frontera superior
-                    sup = frontiersInFiles[j][1];
+                    sup = frontiersInFiles[j][0];
                     // TODO: Aquí leer la frontera superior de archivo
                 }
 
@@ -109,6 +111,7 @@ public class RAMConFronteras {
         // En ant queda la ultima fila y retorna esta como frontera superior, y
         System.out.println(Arrays.toString(filaSuperior_Y));
         System.out.println(Arrays.toString(columnaIzquierda));
+        System.out.println("\n");
         return new int[][] {filaSuperior_Y, columnaIzquierda};
     }
 
@@ -243,7 +246,9 @@ public class RAMConFronteras {
 
     public static void main(String... args) throws Exception {
         //AlgoritmoRAMConFronteras a = new AlgoritmoRAMConFronteras("sunday","saturday", new int[] {1,2,3,4,5,6}, new int[] {0,1,2,3,4,5,6,7,8});
-        calcDist("sunday","saturday", new int[] {1,2,3,4,5,6}, new int[] {0,1,2,3,4,5,6,7,8});
+        //calcDist("sunday","saturday", new int[] {1,2,3,4,5,6}, new int[] {0,1,2,3,4,5,6,7,8});
+        int r = calcAllDist(new String[] {"sun", "da", "y"}, new String[] {"sat", "ur", "day"});
+        System.out.println(r);
         //System.out.println(Arrays.toString(a.calcDist()[0])); // ultima fila
         //System.out.println(Arrays.toString(a.calcDist()[1])); // ultima columna
     }
