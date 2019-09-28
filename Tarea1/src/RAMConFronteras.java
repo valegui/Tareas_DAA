@@ -6,7 +6,8 @@ public class RAMConFronteras {
     public static int SIZE_OF_INT = 4;
     private int I;
     private int O;
-    public int f;
+    private int f;
+    private int N;
     private String X;
     private String Y;
     private String dir_x;
@@ -16,25 +17,34 @@ public class RAMConFronteras {
     private int[] newFrontierColumn;
     private int[] previousFrontierRow;
     private int[] previousFrontierColumn;
+
+
+    public RAMConFronteras(String dir_x, String dir_y, String dir_output, int m, int N){
+        this.I = 0;
+        this.O = 0;
+        this.N = N;
+        this.dir_x = dir_x;
+        this.dir_y = dir_y;
+        this.dir_output = dir_output;
+        this.f = m/20;
+        this.newFrontierColumn = new int[f*B];
+        this.newFrontierRow = new int[f*B];
+        this.previousFrontierColumn = new int[f*B];
+        this.previousFrontierRow = new int[f*B];
+        this.X = "";
+        this.Y = "";
+    }
     
-    public static int[] generarFrontera(int tamaño, int primerValor){
+    public static int[] generarFrontera(int tamaño, int primerValor) {
         int[] a = new int[tamaño];
-        for(int i = 0; i < tamaño; i++){
+        for (int i = 0; i < tamaño; i++) {
             a[i] = primerValor;
             primerValor++;
         }
         return a;
     }
 
-    public int calcAllDist(String[] subStr_X, String[] subStr_Y, String dir_x, String dir_y, String dir_output) throws Exception{
-        //Inicializadores
-        this.I = 0;
-        this.O = 0;
-        this.dir_x = dir_x;
-        this.dir_y = dir_y;
-        this.dir_output = dir_output;
-
-
+    public int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
         int total_X = subStr_X.length;int total_Y = subStr_Y.length; // Cantidad de archivos
         int[][][] frontiersInFiles = new int[total_Y][][]; // Todos los archivos de fronteras necesarios
         int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
