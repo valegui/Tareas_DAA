@@ -7,27 +7,6 @@ public class RAMConFronteras {
     public static int B = 1024;
     public static int SIZE_OF_INT = 4;
     
-    public static class AsbtractBlock{
-        int posX;
-        int posY;
-        int[] frontera_superior;
-        int[] frontera_lateral;
-        String x;
-        String y;
-        int[][] fronterasCalculadas;
-        
-        public AsbtractBlock(int posX, int posY, String x, String y, int[] frontera_lateral, int[] frontera_superior) throws Exception{
-            this.posX = posX;
-            this.posY = posY;
-            this.frontera_superior = frontera_superior;
-            this.frontera_lateral = frontera_lateral;
-            this.x = x;
-            this.y = y;
-            fronterasCalculadas = calcDist(x, y, frontera_lateral, frontera_superior);
-        }
-        
-    }
-    
     public static int[] generarFrontera(int tamaño, int primerValor){
         int[] a = new int[tamaño];
         for(int i = 0; i < tamaño; i++){
@@ -39,7 +18,7 @@ public class RAMConFronteras {
 
     public static int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
         int total_X = subStr_X.length;int total_Y = subStr_Y.length; // Cantidad de archivos
-        AsbtractBlock[] bloquesEnArchivos = new AsbtractBlock[total_Y]; // Todos los bloques necesarios;
+        int[][][] frontiersInFiles = new int[total_Y][][]; // Todos los archivos de fronteras necesarios
         int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
         String str_X, str_Y; // Substrings actuales
         int[] izq, sup; // Fronteras actuales
@@ -61,7 +40,7 @@ public class RAMConFronteras {
                     izq = generarFrontera(str_X.length(), cantidadCaracteres_X + 1);
 
                 }else{ // Sino, leer frontera lateral
-                    izq = bloquesEnArchivos[j-1].fronterasCalculadas[0];
+                    izq = frontiersInFiles[j-1][0];
                     // TODO: Aquí leer frontera lateral de archivo
                 }
 
@@ -70,17 +49,17 @@ public class RAMConFronteras {
                     sup = generarFrontera(str_Y.length() + 1, cantidadCaracteres_Y); // Empieza desde el largo anterior
 
                 }else{ // Sino leer frontera superior
-                    sup = bloquesEnArchivos[j-1].fronterasCalculadas[1];
+                    sup = frontiersInFiles[j][1];
                     // TODO: Aquí leer la frontera superior de archivo
                 }
 
                 // En este punto ya tengo ambas fronteras y strings definidas, calculo nuevas fronteras y sobreescribo
-                bloquesEnArchivos[j] = new AsbtractBlock(a, j, str_X, str_Y, izq, sup); // Guardo en posición que no voy a usar mas
+                frontiersInFiles[j] = calcDist(str_X, str_Y, izq, sup); // Guardo en posición que no voy a usar mas
                 // TODO: Aquí guardar ambas fronteras en el archivo j-ésimo
             }
         }
         // Aquí ya basta retornar el último valor de la última fila del último archivo, que es la frontera superior del archivo j-esimo
-        return bloquesEnArchivos[total_Y - 1].fronterasCalculadas[0][bloquesEnArchivos[total_Y - 1].fronterasCalculadas[0].length - 1];
+        return frontiersInFiles[total_Y - 1][0][frontiersInFiles[total_Y - 1][0].length - 1];
         // TODO: Aqui leer las fronteras del último archivo y extraer último valor
     }
 
