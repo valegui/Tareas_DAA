@@ -17,6 +17,7 @@ public class RAMConFronteras {
     private int[] newFrontierColumn;
     private int[] previousFrontierRow;
     private int[] previousFrontierColumn;
+    private int[] diagValues;
 
 
     public RAMConFronteras(String dir_x, String dir_y, String dir_output, int m, int N){
@@ -31,8 +32,22 @@ public class RAMConFronteras {
         this.newFrontierRow = new int[f*B];
         this.previousFrontierColumn = new int[f*B];
         this.previousFrontierRow = new int[f*B];
+        this.diagValues = new int[(int) Math.ceil(N/(B*f))];
+
         this.X = "";
         this.Y = "";
+    }
+
+    public int getI(){
+        return I;
+    }
+
+    public int getO(){
+        return O;
+    }
+
+    public int getIO(){
+        return I + O;
     }
     
     public static int[] generarFrontera(int tamaño, int primerValor) {
