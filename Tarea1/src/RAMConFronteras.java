@@ -162,17 +162,17 @@ public class RAMConFronteras {
         // m=40; f = 2; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7}
         // m=80; f = 4; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 
-        this.O++;
         String index = Integer.toString(subMatrixID);
         for(int i = 0; i < SIZE_OF_INT * f ; i++){
             // i: numero de bloque en la submatriz
             String subIndex = Integer.toString(i);
-            try{Column
+            try{
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         new FileOutputStream(dir_output + "C_" + index + "_" + subIndex + ".wtf"));
                 for(int j = 0; j < B/SIZE_OF_INT; j++){
                     dataOutputStream.writeInt(newFrontierColumn[i * B / SIZE_OF_INT + j]);
                 }
+                this.O++;
                 dataOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -186,7 +186,6 @@ public class RAMConFronteras {
         // m=40; f = 2; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7}
         // m=80; f = 4; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 
-        this.O++;
         String index = Integer.toString(subMatrixID);
         for(int i = 0; i < SIZE_OF_INT * f ; i++){
             // i: numero de bloque en la submatriz
@@ -197,6 +196,7 @@ public class RAMConFronteras {
                 for(int j = 0; j < B/SIZE_OF_INT; j++){
                     dataOutputStream.writeInt(newFrontierRow[i * B / SIZE_OF_INT + j]);
                 }
+                this.O++;
                 dataOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
