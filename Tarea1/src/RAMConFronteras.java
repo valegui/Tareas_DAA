@@ -4,6 +4,18 @@ import java.util.Arrays;
 public class RAMConFronteras {
     public static int B = 1024;
     public static int SIZE_OF_INT = 4;
+    private int I;
+    private int O;
+    public int f;
+    private String X;
+    private String Y;
+    private String dir_x;
+    private String dir_y;
+    private String dir_output;
+    private int[] newFrontierRow;
+    private int[] newFrontierColumn;
+    private int[] previousFrontierRow;
+    private int[] previousFrontierColumn;
     
     public static int[] generarFrontera(int tamaño, int primerValor){
         int[] a = new int[tamaño];
@@ -14,7 +26,15 @@ public class RAMConFronteras {
         return a;
     }
 
-    public static int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
+    public int calcAllDist(String[] subStr_X, String[] subStr_Y, String dir_x, String dir_y, String dir_output) throws Exception{
+        //Inicializadores
+        this.I = 0;
+        this.O = 0;
+        this.dir_x = dir_x;
+        this.dir_y = dir_y;
+        this.dir_output = dir_output;
+
+
         int total_X = subStr_X.length;int total_Y = subStr_Y.length; // Cantidad de archivos
         int[][][] frontiersInFiles = new int[total_Y][][]; // Todos los archivos de fronteras necesarios
         int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
