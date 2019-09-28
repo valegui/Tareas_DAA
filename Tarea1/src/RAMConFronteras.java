@@ -1,6 +1,4 @@
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
 public class RAMConFronteras {
@@ -135,7 +133,7 @@ public class RAMConFronteras {
 
     }
 
-    public static void writeFrontierColumnToFile(int subMatrixID){
+    public void writeFrontierColumnToFile(int subMatrixID){
         // subMatrixID va de 0 a 15 en el peor caso
         // m=20; f = 1; subMatrixID = {0, 1, 2, 3}
         // m=40; f = 2; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7}
@@ -148,7 +146,7 @@ public class RAMConFronteras {
             try{
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         new FileOutputStream(dir_output + "C_" + index + "_" + subIndex + ".wtf"));
-                for(int j = 0; j < B/SIZE_OF_INT; j++){
+                for(int j = 0; j < B / SIZE_OF_INT; j++){
                     dataOutputStream.writeInt(newFrontierColumn[i * B / SIZE_OF_INT + j]);
                 }
                 this.O++;
@@ -159,7 +157,7 @@ public class RAMConFronteras {
         }
     }
 
-    public static void writeFrontierRowToFile(int subMatrixID){
+    public void writeFrontierRowToFile(int subMatrixID){
         // subMatrixID va de 0 a 15 en el peor caso
         // m=20; f = 1; subMatrixID = {0, 1, 2, 3}
         // m=40; f = 2; subMatrixID = {0, 1, 2, 3, 4, 5, 6, 7}
@@ -171,13 +169,53 @@ public class RAMConFronteras {
             String subIndex = Integer.toString(i);
             try{
                 DataOutputStream dataOutputStream = new DataOutputStream(
-                        new FileOutputStream(dir_output + "R_" + index + "_" + subIndex + ".wtf"));
-                for(int j = 0; j < B/SIZE_OF_INT; j++){
+                        new FileOutputStream(dir_output + "R_" + index + "_" + subIndex + ".wtf")
+                );
+                for(int j = 0; j < B / SIZE_OF_INT; j++){
                     dataOutputStream.writeInt(newFrontierRow[i * B / SIZE_OF_INT + j]);
                 }
                 this.O++;
                 dataOutputStream.close();
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void readIntoFrontierRow(int subMatrixID){
+        String index = Integer.toString(subMatrixID);
+        for(int i = 0; i < SIZE_OF_INT * f; i++){
+            String subIndex = Integer.toString(i);
+            try{
+                DataInputStream dataInputStream = new DataInputStream(
+                        new FileInputStream(dir_output + "R_" + index + "_" + subIndex + ".wtf")
+                );
+                for(int j = 0; j < B / SIZE_OF_INT; i++){
+                    previousFrontierRow[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
+                }
+                this.I++;
+                dataInputStream.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void readIntoFrontierColumn(int subMatrixID){
+        String index = Integer.toString(subMatrixID);
+        for(int i = 0; i < SIZE_OF_INT * f; i++){
+            String subIndex = Integer.toString(i);
+            try{
+                DataInputStream dataInputStream = new DataInputStream(
+                        new FileInputStream(dir_output + "C_" + index + "_" + subIndex + ".wtf")
+                );
+                for(int j = 0; j < B / SIZE_OF_INT; i++){
+                    previousFrontierColumn[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
+                }
+                this.I++;
+                dataInputStream.close();
+            } catch (IOException e){
                 e.printStackTrace();
             }
         }
