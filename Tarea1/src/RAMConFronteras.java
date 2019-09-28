@@ -1,7 +1,9 @@
 import java.util.Arrays;
 
 public class RAMConFronteras {
-    
+    private static int I;
+    private static int O;
+
     public static class AsbtractBlock{
         int posX;
         int posY;
@@ -33,6 +35,8 @@ public class RAMConFronteras {
     }
 
     public static int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
+        I = 0;
+        O = 0;
         int total_X = subStr_X.length;
         int total_Y = subStr_Y.length;
         int cantidadCaracteres_X = 0;
