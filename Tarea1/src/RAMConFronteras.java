@@ -44,7 +44,7 @@ public class RAMConFronteras {
         return a;
     }
 
-    public int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
+    public static int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
         int total_X = subStr_X.length;int total_Y = subStr_Y.length; // Cantidad de archivos
         int[][][] frontiersInFiles = new int[total_Y][][]; // Todos los archivos de fronteras necesarios
         int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
@@ -119,9 +119,9 @@ public class RAMConFronteras {
             computarFila(i, x, y, largo_y, filaSuperior_Y, columnaIzquierda);
         }
         // En ant queda la ultima fila y retorna esta como frontera superior, y
-        System.out.println(Arrays.toString(filaSuperior_Y));
-        System.out.println(Arrays.toString(columnaIzquierda));
-        System.out.println("\n");
+        //System.out.println(Arrays.toString(filaSuperior_Y));
+        //System.out.println(Arrays.toString(columnaIzquierda));
+        //System.out.print("\n");
         return new int[][] {filaSuperior_Y, columnaIzquierda};
     }
 
