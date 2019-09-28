@@ -7,7 +7,8 @@ public class AdaptedRAM {
 
     private int M;
     private int N;
-    private int IO; //Cantidad de lecturas y escrituras
+    private int I; //Cantidad de lecturas
+    private int O; //Cantidad de escrituras
     /*cosas en RAM */
     private int westValue; // 4
     private int northWestValue; // 4
@@ -25,7 +26,8 @@ public class AdaptedRAM {
     public AdaptedRAM(int M, int N){
         this.M = M;
         this.N = N;
-        this.IO = 0;
+        this.I = 0;
+        this.O = 0;
 
         this.westValue = 1;
         this.northWestValue = 0;
@@ -36,7 +38,19 @@ public class AdaptedRAM {
             this.previousRow[i] = i + 1;
         }
     }
-    
+
+    public int getI(){
+        return I;
+    }
+
+    public int getO() {
+        return O;
+    }
+
+    public int getIO(){
+        return I + O;
+    }
+
     public void setDirX(String d_x) {
     		this.dir_x = d_x;
     }
@@ -122,7 +136,7 @@ public class AdaptedRAM {
     }
 
     public void writeActualRowToFile(int matrixSubBlock, int stringBlock){
-    		this.IO++;
+    		this.O++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(dir_row +"B_"+ index +".wtf"));
@@ -136,7 +150,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoPreviousRow(int matrixSubBlock, int stringBlock){
-    		this.IO++;
+    		this.I++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"B_"+ index +".wtf"));
@@ -150,7 +164,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoX(int block){
-    		this.IO++;
+    		this.I++;
     		String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"X_"+ index +".wtf"));
@@ -170,7 +184,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoY(int block){
-    		this.IO++;
+    		this.O++;
     		String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_y +"Y_"+ index +".wtf"));

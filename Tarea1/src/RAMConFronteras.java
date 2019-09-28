@@ -29,6 +29,7 @@ public class RAMConFronteras {
             a[i] = primerValor;
             primerValor++;
         }
+        return a;
     }
 
     public static int calcAllDist(String[] subStr_X, String[] subStr_Y) throws Exception{
