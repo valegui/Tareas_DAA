@@ -2,7 +2,9 @@ import java.io.*;
 
 public class Watafaka {
     public static void main(String[] arguments) {
-        int hello = (int) Math.ceil(1.0/2.0);
+        String hello = "";
+        hello += 'a';
+
         System.out.println(hello);
         int hola = 29292;
         int length = (int) (Math.log10(hola) + 1);

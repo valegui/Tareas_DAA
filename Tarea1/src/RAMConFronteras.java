@@ -18,6 +18,7 @@ public class RAMConFronteras {
     private int[] previousFrontierRow;
     private int[] previousFrontierColumn;
     private int[] diagValues;
+    private int cantSub;
 
 
     public RAMConFronteras(String dir_x, String dir_y, String dir_output, int m, int N){
@@ -32,7 +33,9 @@ public class RAMConFronteras {
         this.newFrontierRow = new int[f*B];
         this.previousFrontierColumn = new int[f*B];
         this.previousFrontierRow = new int[f*B];
-        this.diagValues = new int[(int) Math.ceil(N/(B*f))];
+        this.cantSub = (int) Math.ceil(N/(B*f));
+        this.diagValues = new int[cantSub];
+
 
         this.X = "";
         this.Y = "";
@@ -67,6 +70,51 @@ public class RAMConFronteras {
         int[] izq, sup; // Fronteras actuales
         int[] diagonales = new int[total_Y];
         diagonales[0] = 0;
+
+        // Itero sobre filas de X
+        for(int a = 0; a < total_X; a++){
+            // TODO: Auí leer archivo a-ésimo de X
+            str_X = subStr_X[a]; // Saco String de A
+
+
+            // Itero sobre columnas de Y
+            for(int j = 0; j < total_Y; j++){
+                // TODO: Aquí leer archivo j-ésimo de Y
+                str_Y = subStr_Y[j]; // Saco nuevo substring
+
+
+                // Primera columna es especial para X: generar frontera lateral de X
+                if( j == 0){
+                    izq = generarFrontera(str_X.length(), cantidadCaracteres_X + 1);
+                    cantidadCaracteres_X += str_X.length();
+
+                }else{ // Sino, leer frontera lateral
+                    izq = frontiersInFiles[j-1][1];
+                    // TODO: Aquí leer frontera lateral de archivo
+                }
+
+                // En primera fila se generan fronteras superiores
+                if( a == 0){
+                    sup = generarFrontera(str_Y.length() + 1, cantidadCaracteres_Y); // Empieza desde el largo anterior
+                    cantidadCaracteres_Y += str_Y.length();
+
+                }else{ // Sino leer frontera superior
+                    sup = frontiersInFiles[j][0];
+                    // TODO: Aquí leer la frontera superior de archivo
+                }
+
+                // En este punto ya tengo ambas fronteras y strings definidas, calculo nuevas fronteras y sobreescribo
+                frontiersInFiles[j] = calcDist(str_X, str_Y, izq, sup, diagonales[j]); // Guardo en posición que no voy a usar mas
+                // TODO: Aquí guardar ambas fronteras en el archivo j-ésimo
+            }
+        }
+        // Aquí ya basta retornar el último valor de la última fila del último archivo, que es la frontera superior del archivo j-esimo
+        return frontiersInFiles[total_Y - 1][0][frontiersInFiles[total_Y - 1][0].length - 1];
+        // TODO: Aqui leer las fronteras del último archivo y extraer último valor
+    }
+
+    public int calcAllDist() throws Exception{
+        int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
 
         // Itero sobre filas de X
         for(int a = 0; a < total_X; a++){
