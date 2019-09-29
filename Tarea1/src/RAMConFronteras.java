@@ -172,7 +172,7 @@ public class RAMConFronteras {
 
         //Computar filas
         for (int i = 0; i < largo; i++){
-            computarFilaB(i);
+            computarFilaB(i, j);
         }
         diagValues[j] = previousFrontierColumn[B * f - 1];
 
