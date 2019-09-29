@@ -197,8 +197,6 @@ public class RAMConFronteras {
     public void computarFilaB(int i, int subMatrix) {
         int nwVal, wVal, nVal;
 
-        System.out.println(X.getBytes().length);
-
         wVal = previousFrontierColumn[i] + 1;
         nVal = previousFrontierRow[0] + 1;
         if(i == 0){
@@ -405,15 +403,16 @@ public class RAMConFronteras {
 
     public void readIntoX(int subMatrixID){
         String index;
-        this.X = "";
         try{
+            int k = 0;
             for(int i = 0; i < f; i++){
                 index = Integer.toString(subMatrixID * f + i);
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_x + "X_" + index + ".wtf")
                 );
                 while( dataInputStream.available() > 0) {
-                    this.X += (char) dataInputStream.readByte();
+                    X[k] = dataInputStream.readByte();
+                    k++;
                 }
                 I++;
                 dataInputStream.close();
