@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class Experiments {
 
@@ -24,7 +21,7 @@ public class Experiments {
         }
     }
 
-    public static void experimentAdaptedRAM(int N, int m, String directory, PrintWriter printWriter){
+    public static void experimentAdaptedRAM(int N, int m, String directory, DataOutputStream dataOutputStream){
         generateFile(N, directory);
         AdaptedRAM experiment = new AdaptedRAM(m, N);
         experiment.setDirRow(directory);
@@ -37,20 +34,24 @@ public class Experiments {
         int I = experiment.getI();
         int O = experiment.getO();
         long timeElapsed = endTime - startTime;
-        printWriter.println(
-                1 + ","+
-                Integer.toString(N) + ","+
-                Integer.toString(m) + ","+
-                Integer.toString(I) + ","+
-                Integer.toString(O) + ","+
-                Integer.toString(IO) + ","+
-                Long.toString(timeElapsed)
-        );
+        try {
+            dataOutputStream.writeChars(
+                    Integer.toString(1) + ","+
+                    Integer.toString(N) + ","+
+                    Integer.toString(m) + ","+
+                    Integer.toString(I) + ","+
+                    Integer.toString(O) + ","+
+                    Integer.toString(IO) + ","+
+                    Long.toString(timeElapsed) + "\n"
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         deleteListFilesOnFolder(new File(directory));
 
     }
 
-    public static void experimentGridRAM(int N, int m, String directory, PrintWriter printWriter){
+    public static void experimentGridRAM(int N, int m, String directory, DataOutputStream dataOutputStream){
         generateFile(N, directory);
         RAMConFronteras experiment = new RAMConFronteras(directory, directory, directory, m, N);
         long startTime = System.nanoTime();
@@ -60,15 +61,19 @@ public class Experiments {
         int I = experiment.getI();
         int O = experiment.getO();
         long timeElapsed = endTime - startTime;
-        printWriter.println(
-                Integer.toString(2) + ","+
-                        Integer.toString(N) + ","+
-                        Integer.toString(m) + ","+
-                        Integer.toString(I) + ","+
-                        Integer.toString(O) + ","+
-                        Integer.toString(IO) + ","+
-                        Long.toString(timeElapsed)
-        );
+        try {
+            dataOutputStream.writeUTF(
+                    Integer.toString(2) + ","+
+                            Integer.toString(N) + ","+
+                            Integer.toString(m) + ","+
+                            Integer.toString(I) + ","+
+                            Integer.toString(O) + ","+
+                            Integer.toString(IO) + ","+
+                            Long.toString(timeElapsed) + "\n"
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         deleteListFilesOnFolder(new File(directory));
     }
 
@@ -80,24 +85,29 @@ public class Experiments {
         String resultados = System.getProperty("user.dir") + "/out/resultados/";
         // el lento
 
-        PrintWriter printWriter = null;
+        DataOutputStream dataOutputStream = null;
         try {
-            printWriter = new PrintWriter(new FileWriter(resultados + "exp.csv"));
+            dataOutputStream = new DataOutputStream(new FileOutputStream(resultados + "exp.csv"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            dataOutputStream.writeUTF("tipo de algoritmo,N,m,I,O,IO,time\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        printWriter.println("tipo de algoritmo,N,m,I,O,IO,time");
         for(int t: m){
             for(int n: N1){
-                experimentAdaptedRAM(n, t, directory, printWriter);
+                experimentAdaptedRAM(n, t, directory, dataOutputStream);
             }
         }
         for(int t: m){
             for(int n: N1){
-                experimentGridRAM(n, t, directory, printWriter);
+                experimentGridRAM(n, t, directory, dataOutputStream);
             }
             for(int n: N2){
-                experimentGridRAM(n, t, directory, printWriter);
+                experimentGridRAM(n, t, directory, dataOutputStream);
             }
         }
     }
