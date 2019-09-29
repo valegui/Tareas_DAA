@@ -358,6 +358,7 @@ public class RAMConFronteras {
     }
 
     public void readIntoFrontierRow(int subMatrixID){
+
         String index = Integer.toString(subMatrixID);
         for(int i = 0; i < SIZE_OF_INT * f; i++){
             String subIndex = Integer.toString(i);
@@ -365,7 +366,7 @@ public class RAMConFronteras {
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_output + "R_" + index + "_" + subIndex + ".wtf")
                 );
-                for(int j = 0; j < B / SIZE_OF_INT; i++){
+                for(int j = 0; j < B / SIZE_OF_INT; j++){
                     previousFrontierRow[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
                 }
                 this.I++;
@@ -385,7 +386,7 @@ public class RAMConFronteras {
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_output + "C_" + index + "_" + subIndex + ".wtf")
                 );
-                for(int j = 0; j < B / SIZE_OF_INT; i++){
+                for(int j = 0; j < B / SIZE_OF_INT; j++){
                     previousFrontierColumn[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
                 }
                 this.I++;

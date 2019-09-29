@@ -43,7 +43,7 @@ public class Main {
         String directory = System.getProperty("user.dir") + "/out/files/";
         // int[] N = {1024, 2048, 4096, 8192};
         // int[] M = {10, 20};
-        int N = 1024;
+        int N = 2048;
         int M = 10;
         int m = 20;
         int k = experimentRAMConFronteras(N, m, directory);
@@ -54,5 +54,6 @@ public class Main {
         experiment.setDirX(directory);
         experiment.setDirY(directory);
         System.out.println(experiment.calculateDistance());
+
     }
 }
