@@ -35,6 +35,10 @@ public class RAMConFronteras {
         this.previousFrontierRow = new int[f*B];
         this.cantSub = (int) Math.ceil(N/(B*f));
         this.diagValues = new int[cantSub];
+        for(int i = 0; i < cantSub; i++){
+            diagValues[i] = B * f * i;
+        }
+
 
 
         this.X = "";
