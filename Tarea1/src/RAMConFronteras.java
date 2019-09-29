@@ -191,44 +191,34 @@ public class RAMConFronteras {
         //System.out.print("\n")
     }
 
-    public void computarFilaB(int i) {
-        int [] nueva = new int[largo_y]; // nueva Fila
-        char z; // caracter de y actual
-        int NW_val, W_val, N_val;int NW = 1; // Valores | North West (diagonal) | 1 hasta que se diga lo contrario
+    public void computarFilaB(int i, int subMatrix) {
+        int nwVal, wVal, nVal;
 
-        // Primera iteracion
-        z = y.charAt(0); // Saco y
-        if(x == z)
-            NW = 0;
-        NW_val = diagonal + NW; // Ocupo valor directo de la diagonal
-        N_val = ant[0];
-        W_val = izq[fila];
 
-        nueva[0] = Math.min(NW_val, Math.min(N_val, W_val)); // Primer valor de la fila actual
+        wVal = previousFrontierColumn[i] + 1;
+        nVal = previousFrontierRow[0] + 1;
+        if(i == 0){
+            nwVal = (Y.charAt(0) == X.charAt(i)) ? diagValues[subMatrix] : diagValues[subMatrix] + 1;
+        } else {
+            // wn saca de prevfrntiercolumn
+            nwVal = (Y.charAt(0) == X.charAt(i)) ? previousFrontierColumn[i - 1] : previousFrontierColumn[i - 1] + 1;
+        }
+
+        newFrontierRow[0] = Math.min(nwVal, Math.min(nVal, wVal));
 
         // Recorremos el resto de la fila
-        for(int j = 1; j < largo_y; j++){
-            z = y.charAt(j); // caracter de Y
+        for(int j = 1; j < B * f; j++){
+            wVal = newFrontierRow[j-1] + 1;
+            nVal = previousFrontierRow[j] + 1;
+            nwVal = (Y.charAt(j) == X.charAt(i)) ? previousFrontierRow[j - 1] : previousFrontierRow[j- 1] + 1;
 
-            NW = 1; // Reset de North West
-            if(x == z) // Si son el mismo caracter, diagonal vale 0, sino 1
-                NW = 0;
-            NW_val = ant[j-1] + NW;
-            N_val = ant[j] + 1;
-            W_val = nueva[j-1] + 1;
-
-            nueva[j] = Math.min(NW_val, Math.min(N_val, W_val));
+            newFrontierRow[j] = Math.min(nwVal, Math.min(nVal, wVal));
         }
-        //System.out.println(Arrays.toString(nueva)); // ultima fila
-        //System.out.println(nueva[largo_y]);
 
-        W_val = izq[fila]; // Guardamos valor de la diagonal para retornar en un entero que ya no vamos a usar
-        izq[fila] = nueva[largo_y - 1]; // Guardamos el ultimo valor en el array que ya no vamos a usar, generamos la frontera derecha, (izquierda) para siguiente iteracion
+        newFrontierColumn[i] = newFrontierRow[B * f - 1];
 
-        // Nueva fila pasa a ser la anterior
-        System.arraycopy(nueva, 0, ant, 0, largo_y + 1); // +1 porque guarda el diagonal
+        System.arraycopy(newFrontierRow, 0, previousFrontierRow, 0, B * f);
 
-        return W_val;
     }
 
 
