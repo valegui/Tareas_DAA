@@ -26,13 +26,33 @@ public class Main {
         return experiment.calculateDistance();
     }
 
+    public static int experimentRAMConFronteras(int N, int m, String directory){
+        FileGen fileGen = new FileGen();
+        try {
+            fileGen.genBlocks((int) (N/1024),"X_", directory);
+            fileGen.genBlocks((int) (N/1024),"Y_", directory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RAMConFronteras exp = new RAMConFronteras(directory, directory, directory, m, N);
+        return exp.calcAllDist();
+    }
+
     public static void main(String[] args){
-        String dir = System.getProperty("user.dir") + "/out/files/";
+        String directory = System.getProperty("user.dir") + "/out/files/";
         // int[] N = {1024, 2048, 4096, 8192};
         // int[] M = {10, 20};
         int N = 1024;
         int M = 10;
-        int k = experimentAdaptedRAM(N, M, dir);
+        int m = 20;
+        int k = experimentRAMConFronteras(N, m, directory);
         System.out.println(k);
+
+        AdaptedRAM experiment = new AdaptedRAM(M, N);
+        experiment.setDirRow(directory);
+        experiment.setDirX(directory);
+        experiment.setDirY(directory);
+        System.out.println(experiment.calculateDistance());
     }
 }

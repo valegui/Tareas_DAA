@@ -117,7 +117,7 @@ public class RAMConFronteras {
         // TODO: Aqui leer las fronteras del último archivo y extraer último valor
     }
 
-    public int calcAllDist() throws Exception{
+    public int calcAllDist(){
 
         // Itero sobre filas de X
         for(int a = 0; a < this.cantSub; a++){
@@ -155,18 +155,16 @@ public class RAMConFronteras {
         return newFrontierRow[B*f - 1];
     }
 
-    public void calcDist(int j) throws Exception{
+    public void calcDist(int j){
         int largo = B * f; // Para no recalcular
         int l, p; // Para no recalcular
 
         // Verificación de largos de filas proporcionadas y largos de Strings
         if(largo != (l = previousFrontierRow.length)){
             System.out.println("Frontera columna izquierda anterior administrada no coincide con el largo de string X: " + largo + " (largo real) vs " + l);
-            throw new Exception();
         }
         if(largo != (p = previousFrontierColumn.length)){ // +1 porque contiene el valor de la diagonal
             System.out.println("Frontera superior anterior administrada no coincide con el largo de string Y: " + largo + " (largo real) vs " + p);
-            throw new Exception();
         }
 
 
