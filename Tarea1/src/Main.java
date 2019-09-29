@@ -1,4 +1,7 @@
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class Main {
     public static void listFilesForFolder(final File folder) {
@@ -54,5 +57,6 @@ public class Main {
         experiment.setDirX(directory);
         experiment.setDirY(directory);
         System.out.println(experiment.calculateDistance());
+
     }
 }
