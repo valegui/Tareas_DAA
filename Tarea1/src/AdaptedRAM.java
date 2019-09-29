@@ -14,8 +14,8 @@ public class AdaptedRAM {
     private int northWestValue; // 4
     private int[] previousRow; // 1024
     private int[] actualRow; // 1024
-    private String X; // 1024
-    private String Y; // 1024
+    private byte[] X; // 1024
+    private byte[] Y; // 1024
     
     
     /* directorios*/
@@ -31,6 +31,9 @@ public class AdaptedRAM {
 
         this.westValue = 1;
         this.northWestValue = 0;
+
+        this.X = new byte[B];
+        this.Y = new byte[B];
 
         this.previousRow = new int[numberOfInts];
         this.actualRow = new int[numberOfInts];
@@ -120,14 +123,14 @@ public class AdaptedRAM {
 
         wVal = westValue + 1;
         nVal = previousRow[0] + 1;
-        nwVal = (Y.charAt(numberOfInts * matrixSubBlock) == X.charAt(row % B)) ?
+        nwVal = (Y[numberOfInts * matrixSubBlock] == X[row % B]) ?
                 northWestValue : northWestValue + 1;
         actualRow[0] = Math.min(nwVal, Math.min(nVal, wVal));
 
         for(int i = 1; i < numberOfInts; i++){
             wVal = actualRow[i-1] + 1;
             nVal = previousRow[i] + 1;
-            nwVal = (Y.charAt(numberOfInts * matrixSubBlock + i) == X.charAt(row % B)) ?
+            nwVal = (Y[numberOfInts * matrixSubBlock + i] == X[row % B]) ?
                     previousRow[i - 1] : previousRow[i - 1] + 1;
             actualRow[i] = Math.min(nwVal, Math.min(nVal, wVal));
         }
@@ -169,13 +172,10 @@ public class AdaptedRAM {
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"X_"+ index +".wtf"));
             int i = 0;
-            char[] temp = new char[B];
             while( dataInputStream.available() > 0) {
-            		char b = (char) dataInputStream.readByte();
-            		temp[i] = b;
+            		X[i] = dataInputStream.readByte();
             		i++;	
             }
-            this.X = new String(temp);
             
             dataInputStream.close();
         } catch (IOException e) {
@@ -189,13 +189,10 @@ public class AdaptedRAM {
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_y +"Y_"+ index +".wtf"));
             int i = 0;
-            char[] temp = new char[B];
             while( dataInputStream.available() > 0) {
-            		char b = (char) dataInputStream.readByte();
-            		temp[i] = b;
+            		Y[i] = dataInputStream.readByte();
             		i++;	
             }
-            this.Y = new String(temp);
             
             dataInputStream.close();
         } catch (IOException e) {
