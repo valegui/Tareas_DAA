@@ -8,8 +8,8 @@ public class RAMConFronteras {
     private int O;
     private int f;
     private int N;
-    private String X;
-    private String Y;
+    private byte[] X;
+    private byte[] Y;
     private String dir_x;
     private String dir_y;
     private String dir_output;
@@ -41,8 +41,8 @@ public class RAMConFronteras {
 
 
 
-        this.X = "";
-        this.Y = "";
+        this.X = new byte[B*f];
+        this.Y = new byte[B*f];
     }
 
     public int getI(){
@@ -201,10 +201,10 @@ public class RAMConFronteras {
         wVal = previousFrontierColumn[i] + 1;
         nVal = previousFrontierRow[0] + 1;
         if(i == 0){
-            nwVal = (Y.charAt(0) == X.charAt(i)) ? diagValues[subMatrix] : diagValues[subMatrix] + 1;
+            nwVal = (Y[0] == X[i]) ? diagValues[subMatrix] : diagValues[subMatrix] + 1;
         } else {
             // wn saca de prevfrntiercolumn
-            nwVal = (Y.charAt(0) == X.charAt(i)) ? previousFrontierColumn[i - 1] : previousFrontierColumn[i - 1] + 1;
+            nwVal = (Y[0] == X[i]) ? previousFrontierColumn[i - 1] : previousFrontierColumn[i - 1] + 1;
         }
 
         newFrontierRow[0] = Math.min(nwVal, Math.min(nVal, wVal));
@@ -213,7 +213,7 @@ public class RAMConFronteras {
         for(int j = 1; j < B * f; j++){
             wVal = newFrontierRow[j-1] + 1;
             nVal = previousFrontierRow[j] + 1;
-            nwVal = (Y.charAt(j) == X.charAt(i)) ? previousFrontierRow[j - 1] : previousFrontierRow[j- 1] + 1;
+            nwVal = (Y[j] == X[i]) ? previousFrontierRow[j - 1] : previousFrontierRow[j- 1] + 1;
 
             newFrontierRow[j] = Math.min(nwVal, Math.min(nVal, wVal));
         }
@@ -424,15 +424,16 @@ public class RAMConFronteras {
 
     public void readIntoY(int subMatrixID){
         String index;
-        this.Y = "";
         try{
+            int k = 0;
             for(int i = 0; i < f; i++){
                 index = Integer.toString(subMatrixID * f + i);
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_y + "Y_" + index + ".wtf")
                 );
                 while( dataInputStream.available() > 0) {
-                    this.Y += (char) dataInputStream.readByte();
+                    this.Y[k] = dataInputStream.readByte();
+                    k++;
                 }
                 I++;
                 dataInputStream.close();
