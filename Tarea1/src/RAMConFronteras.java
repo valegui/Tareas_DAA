@@ -118,48 +118,117 @@ public class RAMConFronteras {
     }
 
     public int calcAllDist() throws Exception{
-        int cantidadCaracteres_X = 0, cantidadCaracteres_Y = 0; // Contador para generar fronteras superior e izquierdas en primera columna y primera fila
 
         // Itero sobre filas de X
-        for(int a = 0; a < total_X; a++){
-            // TODO: Auí leer archivo a-ésimo de X
-            str_X = subStr_X[a]; // Saco String de A
+        for(int a = 0; a < this.cantSub; a++){
+            // Aquí leer string x correspondiente a la submatriz fila a
+            readIntoX(a);
 
 
             // Itero sobre columnas de Y
-            for(int j = 0; j < total_Y; j++){
-                // TODO: Aquí leer archivo j-ésimo de Y
-                str_Y = subStr_Y[j]; // Saco nuevo substring
+            for(int j = 0; j < this.cantSub; j++){
+                // Aquí lleer string y correspondiente a la submatriz columna j
+                readIntoY(j);
 
 
                 // Primera columna es especial para X: generar frontera lateral de X
                 if( j == 0){
-                    izq = generarFrontera(str_X.length(), cantidadCaracteres_X + 1);
-                    cantidadCaracteres_X += str_X.length();
+                    this.previousFrontierColumn = generarFrontera(B * f, B* f* a + 1);
 
-                }else{ // Sino, leer frontera lateral
-                    izq = frontiersInFiles[j-1][1];
-                    // TODO: Aquí leer frontera lateral de archivo
+                }else{ // Sino, leer frontera lateral de archivo
+                    readIntoFrontierColumn(j);
                 }
 
                 // En primera fila se generan fronteras superiores
                 if( a == 0){
-                    sup = generarFrontera(str_Y.length() + 1, cantidadCaracteres_Y); // Empieza desde el largo anterior
-                    cantidadCaracteres_Y += str_Y.length();
+                    this.previousFrontierRow = generarFrontera(B * f, B* f* j + 1); // Empieza desde el largo anterior
 
-                }else{ // Sino leer frontera superior
-                    sup = frontiersInFiles[j][0];
-                    // TODO: Aquí leer la frontera superior de archivo
+                }else{ // Sino leer frontera superior de archivo
+                    readIntoFrontierRow(j);
                 }
 
                 // En este punto ya tengo ambas fronteras y strings definidas, calculo nuevas fronteras y sobreescribo
-                frontiersInFiles[j] = calcDist(str_X, str_Y, izq, sup, diagonales[j]); // Guardo en posición que no voy a usar mas
-                // TODO: Aquí guardar ambas fronteras en el archivo j-ésimo
+                calcDist(j);
             }
         }
         // Aquí ya basta retornar el último valor de la última fila del último archivo, que es la frontera superior del archivo j-esimo
-        return frontiersInFiles[total_Y - 1][0][frontiersInFiles[total_Y - 1][0].length - 1];
-        // TODO: Aqui leer las fronteras del último archivo y extraer último valor
+        return newFrontierRow[B*f - 1];
+    }
+
+    public void calcDist(int j) throws Exception{
+        int largo = B * f; // Para no recalcular
+        int l, p; // Para no recalcular
+
+        // Verificación de largos de filas proporcionadas y largos de Strings
+        if(largo != (l = previousFrontierRow.length)){
+            System.out.println("Frontera columna izquierda anterior administrada no coincide con el largo de string X: " + largo + " (largo real) vs " + l);
+            throw new Exception();
+        }
+        if(largo != (p = previousFrontierColumn.length)){ // +1 porque contiene el valor de la diagonal
+            System.out.println("Frontera superior anterior administrada no coincide con el largo de string Y: " + largo + " (largo real) vs " + p);
+            throw new Exception();
+        }
+
+
+        //Computar filas
+        for (int i = 0; i < largo; i++){
+            computarFilaB(i);
+        }
+        diagValues[j] = previousFrontierColumn[B * f - 1];
+
+        if(j == cantSub - 1){
+            writeFrontierRowToFile(j);
+        }
+        else{
+            writeFrontierRowToFile(j);
+            writeFrontierColumnToFile(j+1);
+        }
+
+        // En diag queda el valor a guardar en el arreglo global de diagonales
+        // En ant queda la ultima fila y retorna esta como frontera superior, y
+        //System.out.println(Arrays.toString(filaSuperior_Y));
+        //System.out.println(Arrays.toString(columnaIzquierda));
+        //System.out.print("\n")
+    }
+
+    public void computarFilaB(int i) {
+        int [] nueva = new int[largo_y]; // nueva Fila
+        char z; // caracter de y actual
+        int NW_val, W_val, N_val;int NW = 1; // Valores | North West (diagonal) | 1 hasta que se diga lo contrario
+
+        // Primera iteracion
+        z = y.charAt(0); // Saco y
+        if(x == z)
+            NW = 0;
+        NW_val = diagonal + NW; // Ocupo valor directo de la diagonal
+        N_val = ant[0];
+        W_val = izq[fila];
+
+        nueva[0] = Math.min(NW_val, Math.min(N_val, W_val)); // Primer valor de la fila actual
+
+        // Recorremos el resto de la fila
+        for(int j = 1; j < largo_y; j++){
+            z = y.charAt(j); // caracter de Y
+
+            NW = 1; // Reset de North West
+            if(x == z) // Si son el mismo caracter, diagonal vale 0, sino 1
+                NW = 0;
+            NW_val = ant[j-1] + NW;
+            N_val = ant[j] + 1;
+            W_val = nueva[j-1] + 1;
+
+            nueva[j] = Math.min(NW_val, Math.min(N_val, W_val));
+        }
+        //System.out.println(Arrays.toString(nueva)); // ultima fila
+        //System.out.println(nueva[largo_y]);
+
+        W_val = izq[fila]; // Guardamos valor de la diagonal para retornar en un entero que ya no vamos a usar
+        izq[fila] = nueva[largo_y - 1]; // Guardamos el ultimo valor en el array que ya no vamos a usar, generamos la frontera derecha, (izquierda) para siguiente iteracion
+
+        // Nueva fila pasa a ser la anterior
+        System.arraycopy(nueva, 0, ant, 0, largo_y + 1); // +1 porque guarda el diagonal
+
+        return W_val;
     }
 
 
