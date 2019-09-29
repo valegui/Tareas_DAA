@@ -197,6 +197,7 @@ public class RAMConFronteras {
     public void computarFilaB(int i, int subMatrix) {
         int nwVal, wVal, nVal;
 
+        System.out.println(X.getBytes().length);
 
         wVal = previousFrontierColumn[i] + 1;
         nVal = previousFrontierRow[0] + 1;
