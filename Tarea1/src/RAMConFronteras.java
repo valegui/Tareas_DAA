@@ -148,14 +148,14 @@ public class RAMConFronteras {
                 }
 
                 // En este punto ya tengo ambas fronteras y strings definidas, calculo nuevas fronteras y sobreescribo
-                calcDist(j);
+                calcDist(j,a);
             }
         }
         // Aquí ya basta retornar el último valor de la última fila del último archivo, que es la frontera superior del archivo j-esimo
         return newFrontierRow[B*f - 1];
     }
 
-    public void calcDist(int j){
+    public void calcDist(int j, int a){
         int largo = B * f; // Para no recalcular
         int l, p; // Para no recalcular
 
@@ -178,8 +178,13 @@ public class RAMConFronteras {
             writeFrontierRowToFile(j);
         }
         else{
-            writeFrontierRowToFile(j);
-            writeFrontierColumnToFile(j+1);
+            if(a == cantSub - 1){
+                writeFrontierColumnToFile(j+1);
+            }
+            else {
+                writeFrontierRowToFile(j);
+                writeFrontierColumnToFile(j + 1);
+            }
         }
 
         // En diag queda el valor a guardar en el arreglo global de diagonales
