@@ -98,37 +98,43 @@ public class Experiments implements Runnable{
 
     public static void main(String[] args){
         ExecutorService executorService = Executors.newFixedThreadPool(10);
+        int cantidadDeExperimentosCompletos = 10;
         int[] N1 = {1024, 2048, 4096, 8192};
         int[] N2 = {16384, 32768, 65536};
         int[] m = {20, 40, 80};
         String Wdirectory;
         String ResultDir;
-        // el lento
-        for(int mm = 0; mm < m.length; mm++){
-            for(int nn = 0; nn < N1.length; nn++){
-                Wdirectory = System.getProperty("user.dir") + "/w/" + mm +"_" + nn + "_" + Integer.toString(0) + "/";
-                ResultDir = Wdirectory + "resultados/";
-                File f = new File(ResultDir);f.mkdirs();
-                executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 0));
+        for(int a = 0; a < cantidadDeExperimentosCompletos; a++) {
+            // el lento
+            for (int mm = 0; mm < m.length; mm++) {
+                for (int nn = 0; nn < N1.length; nn++) {
+                    Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(0) + "/";
+                    ResultDir = Wdirectory + "resultados/";
+                    File f = new File(ResultDir);
+                    f.mkdirs();
+                    executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 0));
+                }
+            }
+            // el rapido
+            for (int mm = 0; mm < m.length; mm++) {
+                for (int nn = 0; nn < N1.length; nn++) {
+                    Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
+                    ResultDir = Wdirectory + "resultados/";
+                    File f = new File(ResultDir);
+                    f.mkdirs();
+                    executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 1));
+                }
+            }
+            for (int mm = 0; mm < m.length; mm++) {
+                for (int nn = 0; nn < N2.length; nn++) {
+                    Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
+                    ResultDir = Wdirectory + "resultados/";
+                    File f = new File(ResultDir);
+                    f.mkdirs();
+                    executorService.submit(new Experiments(N2[nn], m[mm], Wdirectory, ResultDir, 1));
+                }
             }
         }
-        for(int mm = 0; mm < m.length; mm++){
-            for(int nn = 0; nn < N1.length; nn++){
-                Wdirectory = System.getProperty("user.dir") + "/w/" + mm +"_" + nn + "_" + Integer.toString(1) + "/";
-                ResultDir = Wdirectory + "resultados/";
-                File f = new File(ResultDir);f.mkdirs();
-                executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 1));
-            }
-        }
-        for(int mm = 0; mm < m.length; mm++){
-            for(int nn = 0; nn < N2.length; nn++){
-                Wdirectory = System.getProperty("user.dir") + "/w/" + mm +"_" + nn + "_" + Integer.toString(1) + "/";
-                ResultDir = Wdirectory + "resultados/";
-                File f = new File(ResultDir);f.mkdirs();
-                executorService.submit(new Experiments(N2[nn], m[mm], Wdirectory, ResultDir, 1));
-            }
-        }
-
         // Apagar ejecutor
         executorService.shutdown();
         try {
