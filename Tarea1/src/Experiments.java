@@ -34,13 +34,13 @@ public class Experiments{
 
     public static void experimentAdaptedRAM(int N, int m, String directory, DataOutputStream dataOutputStream){
         generateFile(N, directory);
-        AdaptedRAM experiment = new AdaptedRAM(m, N);
+        AdaptedRAM experiment = new AdaptedRAM(N);
         experiment.setDirRow(directory);
         experiment.setDirX(directory);
         experiment.setDirY(directory);
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
         int distance = experiment.calculateDistance();
-        long endTime = System.nanoTime();
+        long endTime = System.currentTimeMillis();
         int IO = experiment.getIO();
         int I = experiment.getI();
         int O = experiment.getO();
@@ -64,9 +64,9 @@ public class Experiments{
     public static void experimentGridRAM(int N, int m, String directory, DataOutputStream dataOutputStream){
         generateFile(N, directory);
         RAMConFronteras experiment = new RAMConFronteras(directory, directory, directory, m, N);
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
         int distance = experiment.calcAllDist();
-        long endTime = System.nanoTime();
+        long endTime = System.currentTimeMillis();
         int IO = experiment.getIO();
         int I = experiment.getI();
         int O = experiment.getO();
@@ -97,23 +97,21 @@ public class Experiments{
         DataOutputStream dataOutputStream = null;
 
         for(int i = 0; i < totalExperiments; i++){
-            for(int t: m){
-                for(int n: N1){
-                    try {
-                        dataOutputStream = new DataOutputStream(
-                                new FileOutputStream(result + "T_1_N_" + n +"_m_" + t + "_exp_" + i + ".csv")
-                        );
-                        System.out.println("Comienzo experimento nº" + i +
-                                " - Tipo AdaptedRAM - N: " + n +"\tm:" + t);
-                        experimentAdaptedRAM(n, t, directory, dataOutputStream);
-                        dataOutputStream.close();
-                        System.out.println("| Experimento terminado + Experimento nº" + i +
-                                " - Tipo AdaptedRAM - N: " + n +"\tm:" + t);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+            for(int n: N1){
+                try {
+                    dataOutputStream = new DataOutputStream(
+                            new FileOutputStream(result + "T_1_N_" + n +"_m_" + 40 + "_exp_" + i + ".csv")
+                    );
+                    System.out.println("Comienzo experimento nº" + i +
+                            " - Tipo AdaptedRAM - N: " + n +"\tm:" + 40);
+                    experimentAdaptedRAM(n, 40, directory, dataOutputStream);
+                    dataOutputStream.close();
+                    System.out.println("| Experimento terminado + Experimento nº" + i +
+                            " - Tipo AdaptedRAM - N: " + n +"\tm:" + 40);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             }
             for(int t: m){
                 for(int n: N2){

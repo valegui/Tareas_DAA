@@ -11,7 +11,7 @@ public class Main {
         }
         RAMConFronteras experiment = new RAMConFronteras(directory, directory, directory, m, N);
         System.out.println(experiment.calcAllDist());
-        AdaptedRAM experiment2 = new AdaptedRAM(m, N);
+        AdaptedRAM experiment2 = new AdaptedRAM(N);
         experiment2.setDirRow(directory);
         experiment2.setDirX(directory);
         experiment2.setDirY(directory);

@@ -5,7 +5,6 @@ public class AdaptedRAM {
     private static int SIZE_OF_INT = 4;
     private static int numberOfInts = B / SIZE_OF_INT;
 
-    private int M;
     private int N;
     private int I; //Cantidad de lecturas
     private int O; //Cantidad de escrituras
@@ -23,8 +22,7 @@ public class AdaptedRAM {
     private String dir_y;
     private String dir_row;
 
-    public AdaptedRAM(int M, int N){
-        this.M = M;
+    public AdaptedRAM(int N){
         this.N = N;
         this.I = 0;
         this.O = 0;
@@ -156,10 +154,13 @@ public class AdaptedRAM {
         this.I++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try{
+            byte[] temp = new byte[B];
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"B_"+ index +".wtf"));
-            for(int i = 0; i < numberOfInts; i++){
+            dataInputStream.read(temp);
+            System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousRow, 0, numberOfInts);
+            /*for(int i = 0; i < numberOfInts; i++){
                 previousRow[i] = dataInputStream.readInt();
-            }
+            }*/
             dataInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -171,11 +172,12 @@ public class AdaptedRAM {
     	String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"X_"+ index +".wtf"));
-            int i = 0;
+            dataInputStream.read(X);
+            /*int i = 0;
             while( dataInputStream.available() > 0) {
             		X[i] = dataInputStream.readByte();
             		i++;	
-            }
+            }*/
             dataInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,11 +189,12 @@ public class AdaptedRAM {
     	String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_y +"Y_"+ index +".wtf"));
-            int i = 0;
+            dataInputStream.read(Y);
+            /*int i = 0;
             while( dataInputStream.available() > 0) {
             		Y[i] = dataInputStream.readByte();
             		i++;	
-            }
+            }*/
             dataInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();

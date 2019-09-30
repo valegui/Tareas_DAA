@@ -216,7 +216,7 @@ public class RAMConFronteras {
     }
 
     public void readIntoFrontierRow(int subMatrixID){
-
+        byte[] temp = new byte[B];
         String index = Integer.toString(subMatrixID);
         for(int i = 0; i < SIZE_OF_INT * f; i++){
             String subIndex = Integer.toString(i);
@@ -224,9 +224,13 @@ public class RAMConFronteras {
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_output + "R_" + index + "_" + subIndex + ".wtf")
                 );
+                dataInputStream.read(temp);
+                System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousFrontierRow, i * B / SIZE_OF_INT, B);
+                /*
                 for(int j = 0; j < B / SIZE_OF_INT; j++){
                     previousFrontierRow[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
                 }
+                */
                 this.I++;
                 dataInputStream.close();
             } catch (IOException e){
@@ -238,15 +242,20 @@ public class RAMConFronteras {
 
     public void readIntoFrontierColumn(int subMatrixID){
         String index = Integer.toString(subMatrixID);
+        byte[] temp = new byte[B];
         for(int i = 0; i < SIZE_OF_INT * f; i++){
             String subIndex = Integer.toString(i);
             try{
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_output + "C_" + index + "_" + subIndex + ".wtf")
                 );
+                dataInputStream.read(temp);
+                System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousFrontierColumn, i * B / SIZE_OF_INT, B);
+                /*
                 for(int j = 0; j < B / SIZE_OF_INT; j++){
                     previousFrontierColumn[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
                 }
+                */
                 this.I++;
                 dataInputStream.close();
             } catch (IOException e){
@@ -258,16 +267,22 @@ public class RAMConFronteras {
     public void readIntoX(int subMatrixID){
         String index;
         try{
-            int k = 0;
+            //int k = 0;
+            byte[] temp = new byte[B];
             for(int i = 0; i < f; i++){
                 index = Integer.toString(subMatrixID * f + i);
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_x + "X_" + index + ".wtf")
                 );
+                dataInputStream.read(temp);
+                System.arraycopy(temp, 0, X, i*B, B);
+
+                /*
                 while( dataInputStream.available() > 0) {
                     X[k] = dataInputStream.readByte();
                     k++;
                 }
+                */
                 I++;
                 dataInputStream.close();
             }
@@ -279,16 +294,22 @@ public class RAMConFronteras {
     public void readIntoY(int subMatrixID){
         String index;
         try{
-            int k = 0;
+            //int k = 0;
+            byte[] temp = new byte[B];
             for(int i = 0; i < f; i++){
                 index = Integer.toString(subMatrixID * f + i);
                 DataInputStream dataInputStream = new DataInputStream(
                         new FileInputStream(dir_y + "Y_" + index + ".wtf")
                 );
+                dataInputStream.read(temp);
+                System.arraycopy(temp, 0, Y, i*B, B);
+
+
+                /*
                 while( dataInputStream.available() > 0) {
                     this.Y[k] = dataInputStream.readByte();
                     k++;
-                }
+                }*/
                 I++;
                 dataInputStream.close();
             }
