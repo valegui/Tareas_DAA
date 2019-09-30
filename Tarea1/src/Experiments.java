@@ -1,6 +1,25 @@
 import java.io.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-public class Experiments {
+public class Experiments implements Runnable{
+    private String workingDir;
+    private String resultDir;
+    private int M;
+    private int N;
+    private int type; // 0: Adapted RAM | 1: GridRAM
+    private int ID;
+
+    public Experiments(int N, int M, String workingDir, String resultDir, int type){
+        this.workingDir = workingDir;
+        this.M = M;
+        this.N = N;
+        this.type = type;
+        this.resultDir = resultDir;
+        this.ID = M+N+type;
+    }
 
     public static void generateFile(int N, String directory){
         try {
@@ -35,7 +54,7 @@ public class Experiments {
         int O = experiment.getO();
         long timeElapsed = endTime - startTime;
         try {
-            dataOutputStream.writeChars(
+            dataOutputStream.writeUTF(
                     Integer.toString(1) + ","+
                     Integer.toString(N) + ","+
                     Integer.toString(m) + ","+
@@ -78,37 +97,75 @@ public class Experiments {
     }
 
     public static void main(String[] args){
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
         int[] N1 = {1024, 2048, 4096, 8192};
         int[] N2 = {16384, 32768, 65536};
         int[] m = {20, 40, 80};
-        String directory = System.getProperty("user.dir") + "/out/files/";
-        String resultados = System.getProperty("user.dir") + "/out/resultados/";
+        String Wdirectory;
+        String ResultDir;
         // el lento
+        for(int mm = 0; mm < m.length; mm++){
+            for(int nn = 0; nn < N1.length; nn++){
+                Wdirectory = System.getProperty("user.dir") + "/w/" + mm +"_" + nn + "_" + Integer.toString(0) + "/";
+                ResultDir = Wdirectory + "resultados/";
+                File f = new File(ResultDir);f.mkdirs();
+                executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 0));
+            }
+        }
+        for(int mm = 0; mm < m.length; mm++){
+            for(int nn = 0; nn < N1.length; nn++){
+                Wdirectory = System.getProperty("user.dir") + "/w/" + mm +"_" + nn + "_" + Integer.toString(1) + "/";
+                ResultDir = Wdirectory + "resultados/";
+                File f = new File(ResultDir);f.mkdirs();
+                executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 1));
+            }
+        }
+        for(int mm = 0; mm < m.length; mm++){
+            for(int nn = 0; nn < N2.length; nn++){
+                Wdirectory = System.getProperty("user.dir") + "/w/" + mm +"_" + nn + "_" + Integer.toString(1) + "/";
+                ResultDir = Wdirectory + "resultados/";
+                File f = new File(ResultDir);f.mkdirs();
+                executorService.submit(new Experiments(N2[nn], m[mm], Wdirectory, ResultDir, 1));
+            }
+        }
 
+        // Apagar ejecutor
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+        }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("ID: " + ID + " | Ejecutando algoritmo " + this.type +" M: " + this.M + ", N: " + this.N + " dir: " + workingDir);
         DataOutputStream dataOutputStream = null;
         try {
-            dataOutputStream = new DataOutputStream(new FileOutputStream(resultados + "exp.csv"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            dataOutputStream.writeUTF("tipo de algoritmo,N,m,I,O,IO,time\n");
+            // Crear PrintWriter
+            dataOutputStream = new DataOutputStream(new FileOutputStream(this.resultDir + "exp.csv"));
+            try {
+                dataOutputStream.writeUTF("tipo de algoritmo,N,m,I,O,IO,time\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Ejecutar experimento
+            if (this.type == 0){
+                experimentAdaptedRAM(this.N, this.M, this.workingDir, dataOutputStream);
+            }else{
+                experimentGridRAM(this.N, this.M, this.workingDir, dataOutputStream);
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("ERROR: PrintWriter no creado");
+        }finally {
+            System.out.println("ID: " + ID + " | Experimento terminado + " + this.type +" M: " + this.M + ", N: " + this.N + " dir: " + workingDir);
         }
-        for(int t: m){
-            for(int n: N1){
-                experimentAdaptedRAM(n, t, directory, dataOutputStream);
-            }
-        }
-        for(int t: m){
-            for(int n: N1){
-                experimentGridRAM(n, t, directory, dataOutputStream);
-            }
-            for(int n: N2){
-                experimentGridRAM(n, t, directory, dataOutputStream);
-            }
-        }
+
+
+
     }
 }

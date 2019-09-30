@@ -43,6 +43,8 @@ public class Main {
     }
 
     public static void main(String[] args){
+        System.out.println(Runtime.getRuntime().totalMemory());
+
         String directory = System.getProperty("user.dir") + "/out/files/";
         // int[] N = {1024, 2048, 4096, 8192};
         // int[] M = {10, 20};
@@ -56,7 +58,11 @@ public class Main {
         experiment.setDirRow(directory);
         experiment.setDirX(directory);
         experiment.setDirY(directory);
+
+        System.out.println(Runtime.getRuntime().totalMemory());
+
         System.out.println(experiment.calculateDistance());
 
+        System.out.println(Runtime.getRuntime().totalMemory());
     }
 }

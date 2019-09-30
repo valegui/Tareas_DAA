@@ -80,7 +80,7 @@ public class FileGen{
         String[] prefix = {"X", "Y"};
         String dir = System.getProperty("user.dir") + "/out/files/";
 
-        genBlockWithNDiff(10, prefix, dir,0);
+        genBlockWithNDiff(2, prefix, dir,0);
     }
 
 }
