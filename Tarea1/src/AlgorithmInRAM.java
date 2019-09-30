@@ -1,13 +1,13 @@
 import static jdk.nashorn.internal.objects.NativeMath.min;
 
-public class Algoritmo1 {
+public class AlgorithmInRAM {
     private String x;
     private String y;
     private int largo_x;
     private int largo_y;
     private int[] ant;
 
-    public Algoritmo1(String x, String y){
+    public AlgorithmInRAM(String x, String y){
         int lx = x.length();
         int ly = y.length();
         if(lx > ly){
@@ -67,10 +67,5 @@ public class Algoritmo1 {
         }
         if (largo_y + 1 >= 0) System.arraycopy(nueva, 0, ant, 0, largo_y + 1);
 
-    }
-
-    public static void main(String... args){
-        Algoritmo1 a = new Algoritmo1("saturday", "sunday");
-        System.out.println(a.calcDist());
     }
 }

@@ -1,68 +1,20 @@
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
 public class Main {
-    public static void listFilesForFolder(final File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry);
-            } else {
-                System.out.println(fileEntry.getName());
-            }
-        }
-    }
-
-    public static int experimentAdaptedRAM(int N, int M, String directory){
-        FileGen fileGen = new FileGen();
-        try {
-            fileGen.genBlocks((int) (N/1024),"X_", directory);
-            fileGen.genBlocks((int) (N/1024),"Y_", directory);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        AdaptedRAM experiment = new AdaptedRAM(M, N);
-        experiment.setDirRow(directory);
-        experiment.setDirX(directory);
-        experiment.setDirY(directory);
-        return experiment.calculateDistance();
-    }
-
-    public static int experimentRAMConFronteras(int N, int m, String directory){
-        FileGen fileGen = new FileGen();
-        try {
-            fileGen.genBlocks((int) (N/1024),"X_", directory);
-            fileGen.genBlocks((int) (N/1024),"Y_", directory);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        RAMConFronteras exp = new RAMConFronteras(directory, directory, directory, m, N);
-        return exp.calcAllDist();
-    }
-
     public static void main(String[] args){
-        System.out.println(Runtime.getRuntime().totalMemory());
-
-        String directory = System.getProperty("user.dir") + "/out/files/";
-        // int[] N = {1024, 2048, 4096, 8192};
-        // int[] M = {10, 20};
-        int N = 1024*2;
-        int M = 10;
+        int N = 1024;
         int m = 20;
-        int k = experimentRAMConFronteras(N, m, directory);
-        System.out.println(k);
-
-        AdaptedRAM experiment = new AdaptedRAM(M, N);
-        experiment.setDirRow(directory);
-        experiment.setDirX(directory);
-        experiment.setDirY(directory);
-
-        System.out.println(Runtime.getRuntime().totalMemory());
-
-        System.out.println(experiment.calculateDistance());
-
-        System.out.println(Runtime.getRuntime().totalMemory());
+        String directory = System.getProperty("user.dir") + "/out/files/";;
+        try {
+            FileGen.genBlocks((int) (N/1024),"X_", directory);
+            FileGen.genBlocks((int) (N/1024),"Y_", directory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        RAMConFronteras experiment = new RAMConFronteras(directory, directory, directory, m, N);
+        System.out.println(experiment.calcAllDist());
+        AdaptedRAM experiment2 = new AdaptedRAM(m, N);
+        experiment2.setDirRow(directory);
+        experiment2.setDirX(directory);
+        experiment2.setDirY(directory);
+        System.out.println(experiment2.calculateDistance());
     }
 }

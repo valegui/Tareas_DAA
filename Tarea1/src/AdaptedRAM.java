@@ -139,7 +139,7 @@ public class AdaptedRAM {
     }
 
     public void writeActualRowToFile(int matrixSubBlock, int stringBlock){
-    		this.O++;
+        this.O++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try {
             DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(dir_row +"B_"+ index +".wtf"));
@@ -153,7 +153,7 @@ public class AdaptedRAM {
     }
 
     public void readIntoPreviousRow(int matrixSubBlock, int stringBlock){
-    		this.I++;
+        this.I++;
         String index = Integer.toString(matrixSubBlock + stringBlock * SIZE_OF_INT);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_row +"B_"+ index +".wtf"));
@@ -167,8 +167,8 @@ public class AdaptedRAM {
     }
 
     public void readIntoX(int block){
-    		this.I++;
-    		String index = Integer.toString(block);
+        this.I++;
+    	String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_x +"X_"+ index +".wtf"));
             int i = 0;
@@ -176,7 +176,6 @@ public class AdaptedRAM {
             		X[i] = dataInputStream.readByte();
             		i++;	
             }
-            
             dataInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -184,8 +183,8 @@ public class AdaptedRAM {
     }
 
     public void readIntoY(int block){
-    		this.O++;
-    		String index = Integer.toString(block);
+        this.I++;
+    	String index = Integer.toString(block);
         try{
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(dir_y +"Y_"+ index +".wtf"));
             int i = 0;
@@ -193,7 +192,6 @@ public class AdaptedRAM {
             		Y[i] = dataInputStream.readByte();
             		i++;	
             }
-            
             dataInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();

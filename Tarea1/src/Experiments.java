@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class Experiments implements Runnable{
+public class Experiments{
     private String workingDir;
     private String resultDir;
     private int M;
@@ -12,14 +12,6 @@ public class Experiments implements Runnable{
     private int type; // 0: Adapted RAM | 1: GridRAM
     private int ID;
 
-    public Experiments(int N, int M, String workingDir, String resultDir, int type){
-        this.workingDir = workingDir;
-        this.M = M;
-        this.N = N;
-        this.type = type;
-        this.resultDir = resultDir;
-        this.ID = M+N+type;
-    }
 
     public static void generateFile(int N, String directory){
         try {
@@ -54,8 +46,7 @@ public class Experiments implements Runnable{
         int O = experiment.getO();
         long timeElapsed = endTime - startTime;
         try {
-            dataOutputStream.writeUTF(
-                    Integer.toString(1) + ","+
+            dataOutputStream.writeUTF("AdaptedRAM,"+
                     Integer.toString(N) + ","+
                     Integer.toString(m) + ","+
                     Integer.toString(I) + ","+
@@ -81,8 +72,7 @@ public class Experiments implements Runnable{
         int O = experiment.getO();
         long timeElapsed = endTime - startTime;
         try {
-            dataOutputStream.writeUTF(
-                    Integer.toString(2) + ","+
+            dataOutputStream.writeUTF("GridRAM,"+
                             Integer.toString(N) + ","+
                             Integer.toString(m) + ","+
                             Integer.toString(I) + ","+
@@ -97,83 +87,53 @@ public class Experiments implements Runnable{
     }
 
     public static void main(String[] args){
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        int cantidadDeExperimentosCompletos = 10;
+        int totalExperiments = 10;
         int[] N1 = {1024, 2048, 4096, 8192};
-        int[] N2 = {16384, 32768, 65536};
+        int[] N2 = {1024, 2048, 4096, 8192, 16384, 32768, 65536};
         int[] m = {20, 40, 80};
-        String Wdirectory;
-        String ResultDir;
-        for(int a = 0; a < cantidadDeExperimentosCompletos; a++) {
-            // el lento
-            for (int mm = 0; mm < m.length; mm++) {
-                for (int nn = 0; nn < N1.length; nn++) {
-                    Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(0) + "/";
-                    ResultDir = System.getProperty("user.dir")  + "/r_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(0) + "/";
-                    File f1 = new File(Wdirectory);f1.mkdirs();
-                    File f2 = new File(ResultDir);f2.mkdirs();
-                    executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 0));
-                }
-            }
-            // el rapido
-            for (int mm = 0; mm < m.length; mm++) {
-                for (int nn = 0; nn < N1.length; nn++) {
-                    Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
-                    ResultDir = System.getProperty("user.dir")  + "/r_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
-                    File f1 = new File(Wdirectory);f1.mkdirs();
-                    File f2 = new File(ResultDir);f2.mkdirs();
-                    executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 1));
-                }
-            }
-            for (int mm = 0; mm < m.length; mm++) {
-                for (int nn = 0; nn < N2.length; nn++) {
-                    Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
-                    ResultDir = System.getProperty("user.dir")  + "/r_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
-                    File f1 = new File(Wdirectory);f1.mkdirs();
-                    File f2 = new File(ResultDir);f2.mkdirs();
-                    executorService.submit(new Experiments(N2[nn], m[mm], Wdirectory, ResultDir, 1));
-                }
-            }
-        }
-        // Apagar ejecutor
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-        }
-    }
+        String directory = System.getProperty("user.dir") + "/out/files/";;
+        String result = System.getProperty("user.dir") + "/out/results/";
 
-    @Override
-    public void run() {
-        System.out.println("ID: " + ID + " | Ejecutando algoritmo " + this.type +" M: " + this.M + ", N: " + this.N + " dir: " + workingDir);
         DataOutputStream dataOutputStream = null;
-        try {
-            // Crear PrintWriter
-            dataOutputStream = new DataOutputStream(new FileOutputStream(this.resultDir + "exp.csv"));
-            /*try {
-                dataOutputStream.writeUTF("tipo de algoritmo,N,m,I,O,IO,time\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-            // Ejecutar experimento
-            if (this.type == 0){
-                experimentAdaptedRAM(this.N, this.M, this.workingDir, dataOutputStream);
-            }else{
-                experimentGridRAM(this.N, this.M, this.workingDir, dataOutputStream);
+
+        for(int i = 0; i < totalExperiments; i++){
+            for(int t: m){
+                for(int n: N1){
+                    try {
+                        dataOutputStream = new DataOutputStream(
+                                new FileOutputStream(result + "T_1_N_" + n +"_m_" + t + "_exp_" + i + ".csv")
+                        );
+                        System.out.println("Comienzo experimento nº" + i +
+                                " - Tipo AdaptedRAM - N: " + n +"\tm:" + t);
+                        experimentAdaptedRAM(n, t, directory, dataOutputStream);
+                        dataOutputStream.close();
+                        System.out.println("| Experimento terminado + Experimento nº" + i +
+                                " - Tipo AdaptedRAM - N: " + n +"\tm:" + t);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
-            // Cerrar outputstream
-            dataOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("ERROR: PrintWriter no creado");
-        }finally {
-            System.out.println("ID: " + ID + " | Experimento terminado + " + this.type +" M: " + this.M + ", N: " + this.N + " dir: " + resultDir);
+            for(int t: m){
+                for(int n: N2){
+                    try {
+                        dataOutputStream = new DataOutputStream(
+                                new FileOutputStream(result + "T_2_N_" + n +"_m_" + t + "_exp_" + i + ".csv")
+                        );
+                        System.out.println("Comienzo experimento nº" + i +
+                                " - Tipo GridRAM - N: " + n +"\tm:" + t);
+                        experimentGridRAM(n, t, directory, dataOutputStream);
+                        dataOutputStream.close();
+                        System.out.println("| Experimento terminado + Experimento nº" + i +
+                                " - Tipo GridRAM - N: " + n +"\tm:" + t);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-
-
-
     }
+
+
 }
