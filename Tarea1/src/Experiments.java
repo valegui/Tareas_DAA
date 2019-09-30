@@ -109,9 +109,9 @@ public class Experiments implements Runnable{
             for (int mm = 0; mm < m.length; mm++) {
                 for (int nn = 0; nn < N1.length; nn++) {
                     Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(0) + "/";
-                    ResultDir = Wdirectory + "resultados/";
-                    File f = new File(ResultDir);
-                    f.mkdirs();
+                    ResultDir = System.getProperty("user.dir") + "/w_" + a + "/" + "r_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
+                    File f1 = new File(Wdirectory);f1.mkdirs();
+                    File f2 = new File(ResultDir);f2.mkdirs();
                     executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 0));
                 }
             }
@@ -119,18 +119,18 @@ public class Experiments implements Runnable{
             for (int mm = 0; mm < m.length; mm++) {
                 for (int nn = 0; nn < N1.length; nn++) {
                     Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
-                    ResultDir = Wdirectory + "resultados/";
-                    File f = new File(ResultDir);
-                    f.mkdirs();
+                    ResultDir = System.getProperty("user.dir") + "/w_" + a + "/" + "r_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
+                    File f1 = new File(Wdirectory);f1.mkdirs();
+                    File f2 = new File(ResultDir);f2.mkdirs();
                     executorService.submit(new Experiments(N1[nn], m[mm], Wdirectory, ResultDir, 1));
                 }
             }
             for (int mm = 0; mm < m.length; mm++) {
                 for (int nn = 0; nn < N2.length; nn++) {
                     Wdirectory = System.getProperty("user.dir") + "/w_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
-                    ResultDir = Wdirectory + "resultados/";
-                    File f = new File(ResultDir);
-                    f.mkdirs();
+                    ResultDir = System.getProperty("user.dir") + "/w_" + a + "/" + "r_" + a + "/" + mm + "_" + nn + "_" + Integer.toString(1) + "/";
+                    File f1 = new File(Wdirectory);f1.mkdirs();
+                    File f2 = new File(ResultDir);f2.mkdirs();
                     executorService.submit(new Experiments(N2[nn], m[mm], Wdirectory, ResultDir, 1));
                 }
             }
@@ -164,6 +164,8 @@ public class Experiments implements Runnable{
             }else{
                 experimentGridRAM(this.N, this.M, this.workingDir, dataOutputStream);
             }
+            // Cerrar outputstream
+            dataOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERROR: PrintWriter no creado");
