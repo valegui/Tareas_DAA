@@ -97,7 +97,6 @@ public class Experiments{
         DataOutputStream dataOutputStream = null;
 
         for(int i = 0; i < totalExperiments; i++){
-            if(i!=0){
             for(int n: N1){
                 try {
                     dataOutputStream = new DataOutputStream(
@@ -113,7 +112,6 @@ public class Experiments{
                     e.printStackTrace();
                 }
 
-            }
             }
             for(int t: m){
                 for(int n: N2){
