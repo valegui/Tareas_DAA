@@ -28,7 +28,7 @@ public class RAMConFronteras {
         this.dir_x = dir_x;
         this.dir_y = dir_y;
         this.dir_output = dir_output;
-        this.f = m/20;
+        this.f = N/B < m/20 ? N/B : m/20;
         this.newFrontierColumn = new int[f*B];
         this.newFrontierRow = new int[f*B];
         this.previousFrontierColumn = new int[f*B];
@@ -124,7 +124,7 @@ public class RAMConFronteras {
         diagValues[j] = previousFrontierColumn[B * f - 1];
 
         if(j == cantSub - 1){
-            writeFrontierRowToFile(j);
+            if(a != cantSub - 1) writeFrontierRowToFile(j);
         }
         else{
             if(a == cantSub - 1){
@@ -225,7 +225,7 @@ public class RAMConFronteras {
                         new FileInputStream(dir_output + "R_" + index + "_" + subIndex + ".wtf")
                 );
                 dataInputStream.read(temp);
-                System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousFrontierRow, i * B / SIZE_OF_INT, B);
+                System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousFrontierRow, i * B / SIZE_OF_INT, B / SIZE_OF_INT);
                 /*
                 for(int j = 0; j < B / SIZE_OF_INT; j++){
                     previousFrontierRow[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();
@@ -250,7 +250,7 @@ public class RAMConFronteras {
                         new FileInputStream(dir_output + "C_" + index + "_" + subIndex + ".wtf")
                 );
                 dataInputStream.read(temp);
-                System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousFrontierColumn, i * B / SIZE_OF_INT, B);
+                System.arraycopy(Utils.convertByteToIntArray(temp), 0, previousFrontierColumn, i * B / SIZE_OF_INT, B / SIZE_OF_INT);
                 /*
                 for(int j = 0; j < B / SIZE_OF_INT; j++){
                     previousFrontierColumn[i * B / SIZE_OF_INT + j] = dataInputStream.readInt();

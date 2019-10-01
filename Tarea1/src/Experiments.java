@@ -87,7 +87,7 @@ public class Experiments{
     }
 
     public static void main(String[] args){
-        int totalExperiments = 10;
+        int totalExperiments = 15;
         int[] N1 = {1024, 2048, 4096, 8192};
         int[] N2 = {1024, 2048, 4096, 8192, 16384, 32768, 65536};
         int[] m = {20, 40, 80};
@@ -97,6 +97,7 @@ public class Experiments{
         DataOutputStream dataOutputStream = null;
 
         for(int i = 0; i < totalExperiments; i++){
+            if(i!=0){
             for(int n: N1){
                 try {
                     dataOutputStream = new DataOutputStream(
@@ -112,6 +113,7 @@ public class Experiments{
                     e.printStackTrace();
                 }
 
+            }
             }
             for(int t: m){
                 for(int n: N2){
